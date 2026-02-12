@@ -1,0 +1,54 @@
+/* biblereader.cpp
+ * Computer Science, MVNU
+ * CSC-3004 Introduction to Software Development
+ *
+ * main function for Project 1
+ *
+ * NOTE: You may add code to this file, but do not
+ * delete any code or delete any comments.
+ *
+ * STUDENT NAME: Coen Hall 
+ */
+
+#include "Ref.h"
+#include "Verse.h"
+#include "Bible.h"
+#include <iostream>
+#include <fstream>
+#include <string> 
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+int main (int argc, char **argv)
+{
+   // Create Bible object to process the raw text file
+   Bible webBible("/home/class/csc3004/Bibles/web-complete");
+	
+   Verse verse;
+   int bookNum, chapterNum, verseNum;
+   LookupResult result;
+	
+   cout << "Using Bible from: ";
+   webBible.display();
+	
+   // Prompt for input: get reference to lookup
+   // This is good for testing your classes quickly for the first milestone.
+   cout << "Enter 3 integers for book, chapter and verse to find: " << flush;
+   cin >> bookNum >> chapterNum >> verseNum;
+   // TODO: your final program should get input from command line arguments instead.
+
+   // Create a reference from the numbers
+   Ref ref(bookNum, chapterNum, verseNum);
+
+   // Use the Bible object to retrieve the verse by reference
+   cout << "Looking up reference: ";
+   ref.display();
+   cout << endl;
+
+   verse = webBible.lookup(ref, result);
+   cout << "Result status: " << result << endl;
+   verse.display();
+   cout << endl;
+}
