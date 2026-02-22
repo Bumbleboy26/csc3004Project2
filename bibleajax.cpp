@@ -36,6 +36,23 @@
 using namespace std;
 using namespace cgicc;
 
+static const string names[66]
+{
+   "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua",
+   "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings",
+   "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther",
+   "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon",
+   "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel",
+   "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum",
+   "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
+   "Matthew", "Mark", "Luke", "John", "Acts", "Romans",
+   "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
+   "Phillipians", "Colossians", "1 Thessalonians", "2 Thessalonians",
+   "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James",
+   "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude",
+   "Revelation"
+};
+
 int main()
 {
    /* A CGI program must send a response header with content type
@@ -117,8 +134,7 @@ int main()
       }
       else
       {
-         cout << "<p>The number of verses must be at least 1.</p>" << endl;
-         validInput = false;
+         numVerses = 1;
       }
    }
 
@@ -141,18 +157,22 @@ int main()
       if(status == NO_BOOK)
       {
          cout << "<p>Lookup failed, no such book " << bookNum << " exists</p>" << endl;
+         validInput = false;
       }
       else if(status == NO_CHAPTER)
       {
          cout << "<p>Lookup failed, no such chapter " << chapterNum << " exists</p>" << endl;
+         validInput = false;
       }
       else if(status == NO_VERSE)
       {
          cout << "<p>Lookup failed, no such verse " << verseNum << " exists</p>" << endl;
+         validInput = false;
       }
       else
       {
          cout << "<p>Lookup failed</p>" << endl;
+         validInput = false;
       }
    }
 
@@ -164,8 +184,20 @@ int main()
     */
    if (validInput)
    {
-      cout << "<p><b>" << bookNum << ":" << chapterNum << ":" << verseNum << "</b><br>"
+      cout << "<p><b>" << names[foundVerse.getRef().getBook() - 1] << " " << chapterNum << ":" << verseNum << "</b><br>"
            << foundVerse.getVerse() << "</p>" << endl;
+
+      for(int i = 0; i < numVerses - 1; i++)
+      {
+         Verse v = webBible.nextVerse(status);
+         if(status != SUCCESS)
+         {
+            break;
+         }
+
+         cout << "<p><b>" << names[foundVerse.getRef().getBook() - 1] << " " << v.getRef().getChapter() << ":"
+              << v.getRef().getVerse() << "</b><br>" << v.getVerse() << "</p>" << endl;
+      }
    }
    else
    {
